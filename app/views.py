@@ -6,23 +6,6 @@ from .models import User
 from datetime import datetime
 
 
-@app.route('/edit', methods=['GET', 'POST'])
-@login_required
-def edit():
-    form = EditForm()
-    if form.validate_on_submit():
-        g.user.nickname = form.nickname.data
-        g.user.about_me = form.about_me.data
-        db.session.add(g.user)
-        db.session.commit()
-        flash('Your changes have been saved.')
-        return redirect(url_for('edit'))
-    else:
-        form.nickname.data = g.user.nickname
-        form.about_me.data = g.user.about_me
-    return render_template('edit.html', form=form)
-
-
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -35,6 +18,17 @@ def before_request():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
         db.session.commit()
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('500.html'), 500
 
 
 @app.route('/')
@@ -62,9 +56,8 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 def login():
-    # At the top of the function body we check if g.user is set to an authenticated user, and in that case we redirect to the index page. The idea here is that if there is a logged in user already we will not do a second login on top.
-    # The g global is setup by Flask as a place to store and share data during the life of a request
-    if g.user is not None and g.user.is_authenticated:
+    if g.user is not None and g.user.is_authenticated:  # At the top of the function body we check if g.user is set to an authenticated user, and in that case we redirect to the index page. The idea here is that if there is a logged in user already we will not do a second login on top.
+        #  The g global is setup by Flask as a place to store and share data during the life of a request
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
@@ -80,7 +73,6 @@ def login():
 
 @oid.after_login
 def after_login(resp):
-    # we search our database for the email provided. If the email is not found we consider this a new user, so we add a new user to our database, pretty much as we have learned in the previous chapter. Note that we handle the case of a missing nickname, since some OpenID providers may not have that information.
     if resp.email is None or resp.email == "":
         flash('Invalid login. Please try again.')
         return redirect(url_for('login'))
@@ -89,7 +81,8 @@ def after_login(resp):
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
-        user = User(nickname=nickname, email=resp.email)
+        nickname = User.make_unique_nickname(nickname)
+        user = User(nickname = nickname, email = resp.email)
         db.session.add(user)
         db.session.commit()
     remember_me = False
@@ -120,3 +113,20 @@ def user(nickname):
     return render_template('user.html',
                            user=user,
                            posts=posts)
+
+
+@app.route('/edit', methods=['GET', 'POST'])
+@login_required
+def edit():
+    form = EditForm(g.user.nickname)
+    if form.validate_on_submit():
+        g.user.nickname = form.nickname.data
+        g.user.about_me = form.about_me.data
+        db.session.add(g.user)
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('edit'))
+    else:
+        form.nickname.data = g.user.nickname
+        form.about_me.data = g.user.about_me
+    return render_template('edit.html', form=form)

@@ -4,11 +4,16 @@
 {% block content %}
   <h1>Edit Your Profile</h1>
   <form action="" method="post" name="edit">
-      {{form.hidden_tag()}}
+      {{form.hidden_tag()}} <!--The form.hidden_tag() template argument will get replaced with a hidden field that implements the CSRF prevention that we enabled in the configuration. This field needs to be in all your forms if you have CSRF enabled.-->
       <table>
           <tr>
               <td>Your nickname:</td>
-              <td>{{ form.nickname(size=24) }}</td>
+              <td>
+                  {{ form.nickname(size=24) }}
+                  {% for error in form.errors.nickname %}
+                  <br><span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </td>
           </tr>
           <tr>
               <td>About yourself:</td>

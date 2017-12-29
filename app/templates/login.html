@@ -18,6 +18,7 @@ function set_openid(openid, pr)
 </script>
 <h1>Sign In</h1>
 <form action="" method="post" name="login">
+    <!--The form.hidden_tag() template argument will get replaced with a hidden field that implements the CSRF prevention that we enabled in the configuration. This field needs to be in all your forms if you have CSRF enabled.-->
     {{ form.hidden_tag() }}
     <p>
         Please enter your OpenID, or select one of the providers below:<br>
