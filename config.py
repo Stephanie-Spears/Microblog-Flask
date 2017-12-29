@@ -16,6 +16,8 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 # added TRACK_MODIFICATIONS = false here to disable warning in pycharm
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+WHOOSH_BASE = os.path.join(basedir, 'search.db')
+
 
 
 # mail server settings
@@ -31,4 +33,5 @@ ADMINS = ['you@example.com']
 
 
 # pagination
-POSTS_PER_PAGE = 3
+POSTS_PER_PAGE = 10
+MAX_SEARCH_RESULTS = 50

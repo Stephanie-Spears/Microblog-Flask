@@ -22,10 +22,21 @@
       </tr>
   </table>
   <hr>
+
     {% for post in posts.items %}
         {% include 'post.html' %}
     {% endfor %}
+<!--TODO: NEED TO REVERSE USER POSTS SO NEWEST IS FIRST-->
+    {% if posts.has_prev %}
+        <a href="{{ url_for('user', nickname=user.nickname, page=posts.prev_num) }}"><< Newer posts</a>
+    {% else %}
+        << Newer posts
+    {% endif %}
+    |
+    {% if posts.has_next %}
+        <a href="{{ url_for('user', nickname=user.nickname, page=posts.next_num) }}">Older posts >></a>
+    {% else %}
+        Older posts >>
+    {% endif %}
 
-    {% if posts.has_prev %}<a href="{{ url_for('user', nickname=user.nickname, page=posts.prev_num) }}"><< Newer posts</a>{% else %}<< Newer posts{% endif %} |
-    {% if posts.has_next %}<a href="{{ url_for('user', nickname=user.nickname, page=posts.next_num) }}">Older posts >></a>{% else %}Older posts >>{% endif %}
 {% endblock %}
