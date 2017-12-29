@@ -43,7 +43,7 @@ def index():
         },
         {
             'author': {'nickname': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
+            'body': 'I\'m cold as shit, John!'
         }
     ]
     return render_template('index.html',
@@ -53,17 +53,18 @@ def index():
 
 
 # The oid.loginhandler tells Flask-OpenID that this is our login view function.
+    # At the top of the function body we check if g.user is set to an authenticated user, and in that case we redirect to the index page. The idea here is that if there is a logged in user already we will not do a second login on top.
+    #  The g global is setup by Flask as a place to store and share data during the life of a request
+    # First we store the value of the remember_me boolean in the flask session, not to be confused with the db.session from Flask-SQLAlchemy. We've seen that the flask.g object stores and shares data though the life of a request. The flask.session provides a much more complex service along those lines. Once data is stored in the session object it will be available during that request and any future requests made by the same client. Data remains in the session until explicitly removed. To be able to do this, Flask keeps a different session container for each client of our application.
+    # The oid.try_login call in the following line is the call that triggers the user authentication through Flask-OpenID. The function takes two arguments, the openid given by the user in the web form and a list of data items that we want from the OpenID provider. Since we defined our User class to include nickname and email, those are the items we are going to ask for.
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 def login():
-    if g.user is not None and g.user.is_authenticated:  # At the top of the function body we check if g.user is set to an authenticated user, and in that case we redirect to the index page. The idea here is that if there is a logged in user already we will not do a second login on top.
-        #  The g global is setup by Flask as a place to store and share data during the life of a request
+    if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        # First we store the value of the remember_me boolean in the flask session, not to be confused with the db.session from Flask-SQLAlchemy. We've seen that the flask.g object stores and shares data though the life of a request. The flask.session provides a much more complex service along those lines. Once data is stored in the session object it will be available during that request and any future requests made by the same client. Data remains in the session until explicitly removed. To be able to do this, Flask keeps a different session container for each client of our application.
         session['remember_me'] = form.remember_me.data
-        # The oid.try_login call in the following line is the call that triggers the user authentication through Flask-OpenID. The function takes two arguments, the openid given by the user in the web form and a list of data items that we want from the OpenID provider. Since we defined our User class to include nickname and email, those are the items we are going to ask for.
         return oid.try_login(form.openid.data, ask_for=['nickname', 'email'])
     return render_template('login.html',
                            title='Sign In',
@@ -82,8 +83,11 @@ def after_login(resp):
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
         nickname = User.make_unique_nickname(nickname)
-        user = User(nickname = nickname, email = resp.email)
+        user = User(nickname=nickname, email=resp.email)
         db.session.add(user)
+        db.session.commit()
+        # make the user follow him/herself
+        db.session.add(user.follow(user))
         db.session.commit()
     remember_me = False
     if 'remember_me' in session:
@@ -130,3 +134,43 @@ def edit():
         form.nickname.data = g.user.nickname
         form.about_me.data = g.user.about_me
     return render_template('edit.html', form=form)
+
+
+@app.route('/follow/<nickname>')
+@login_required
+def follow(nickname):
+    user = User.query.filter_by(nickname=nickname).first()
+    if user is None:
+        flash('User %s not found.' % nickname)
+        return redirect(url_for('index'))
+    if user == g.user:
+        flash('You can\'t follow yourself!')
+        return redirect(url_for('user', nickname=nickname))
+    u = g.user.follow(user)
+    if u is None:
+        flash('Cannot follow ' + nickname + '.')
+        return redirect(url_for('user', nickname=nickname))
+    db.session.add(u)
+    db.session.commit()
+    flash('You are now following ' + nickname + '!')
+    return redirect(url_for('user', nickname=nickname))
+
+
+@app.route('/unfollow/<nickname>')
+@login_required
+def unfollow(nickname):
+    user = User.query.filter_by(nickname=nickname).first()
+    if user is None:
+        flash('User %s not found.' % nickname)
+        return redirect(url_for('index'))
+    if user == g.user:
+        flash('You can\'t unfollow yourself!')
+        return redirect(url_for('user', nickname=nickname))
+    u = g.user.unfollow(user)
+    if u is None:
+        flash('Cannot unfollow ' + nickname + '.')
+        return redirect(url_for('user', nickname=nickname))
+    db.session.add(u)
+    db.session.commit()
+    flash('You have stopped following ' + nickname + '.')
+    return redirect(url_for('user', nickname=nickname))
