@@ -22,7 +22,6 @@ class User(db.Model):
             version += 1
         return new_nickname
 
-
     @property
     def is_authenticated(self):  # should just return True unless the object represents a user that should not be allowed to authenticate for some reason
         return True

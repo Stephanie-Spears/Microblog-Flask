@@ -26,4 +26,5 @@ MAIL_USERNAME = None
 MAIL_PASSWORD = None
 
 # administrator list
-ADMINS = ['stephanie.spears1@gmail.com', 'stephanie.spears11@gmail.com', 'stephanie.spears1@yahoo.com', 'jungletrippn@aol.com']
+ADMINS = ['you@example.com']
+# ADMINS = ['stephanie.spears1@gmail.com', 'stephanie.spears11@gmail.com', 'stephanie.spears1@yahoo.com', 'jungletrippn@aol.com']

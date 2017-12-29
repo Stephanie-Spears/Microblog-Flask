@@ -4,3 +4,7 @@ app.db
 search.db
 flask
 *.mo
+
+
+# Ignore test database files -- self add
+test.db
