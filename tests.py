@@ -1,4 +1,4 @@
-#!flask/bin/python
+#!flask36/bin/python
 import os
 import unittest
 from datetime import datetime, timedelta
@@ -29,7 +29,7 @@ class TestCase(unittest.TestCase):
         assert avatar[0:len(expected)] == expected
 
     def test_make_unique_nickname(self):
-        # create a user and write it to the database
+        # create a user and write it `o the database
         u = User(nickname='john', email='john@example.com')
         db.session.add(u)
         db.session.commit()
