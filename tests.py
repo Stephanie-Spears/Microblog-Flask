@@ -1,4 +1,4 @@
-#!flask/bin/python
+#!flask36/bin/python
 import os
 import unittest
 from datetime import datetime, timedelta
