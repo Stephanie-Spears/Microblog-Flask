@@ -20,27 +20,9 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 WHOOSH_BASE = os.path.join(basedir, 'search.db')
 
 
-# GMAIL mail OUTGOING server settings FOR TLS
-# MAIL_SERVER = 'smtp.googlemail.com'
-MAIL_SERVER = 'smtp.gmail.com'
-MAIL_PORT = 587
-MAIL_USE_TLS = True
-MAIL_USE_SSL = False
-MAIL_USERNAME = os.environ.get('GMAIL_USERNAME_ONE_ONE')
-MAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD_ONE_ONE')
-
-
-# administrator list --> WHO the message is sent FROM
-ADMINS = ['stephanie.spears11@gmail.com', 'stephanie.spears11@yahoo.com']
-
-
 # pagination
-POSTS_PER_PAGE = 3
+POSTS_PER_PAGE = 4
 MAX_SEARCH_RESULTS = 50
-
-
-# added TRACK_MODIFICATIONS = false here to disable warning in pycharm
-SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 # NOTE (WE ARE USING POP):
@@ -48,19 +30,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 #     POP (Post Office Protocol) is an older protocol that copies emails from the email server to the app. Actions performed in the app don't affect email on the email server.
 
 
-# # email server OUTGOING DEFAULT (None)
-# MAIL_SERVER = 'your.mailserver.com'
-# MAIL_PORT = 25
-# MAIL_USE_TLS = False
-# MAIL_USE_SSL = False
-# MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-# MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-#
-# # administrator list
-# ADMINS = ['you@example.com']
-
-
-# GMAIL mail server settings FOR OUTGOING SSL
+# # GMAIL mail server settings FOR OUTGOING SSL --> #from google to google works, from google to yahoo works --> must enable less secure apps in gmail to allow mail to be sent
 # MAIL_SERVER = 'smtp.googlemail.com'
 # MAIL_PORT = 465
 # MAIL_USE_TLS = False
@@ -68,13 +38,18 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 # MAIL_USERNAME = os.environ.get('GMAIL_USERNAME_ONE_ONE')
 # MAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD_ONE_ONE')
 
-# # YAHOO mail OUTGOING server settings -> SSL only true 'if available'
-# # MAIL_SERVER = 'smtp.googlemail.com'
-# MAIL_SERVER = 'smtp.gmail.com'
-# MAIL_PORT = 456
-# MAIL_USE_TLS = True
-# MAIL_USE_SSL = True
-# MAIL_USERNAME = os.environ.get('YMAIL_USERNAME_ONE')
-# MAIL_PASSWORD = os.environ.get('YMAIL_PASSWORD_ONE')
+# # YAHOO mail OUTGOING server settings ->
+# Must set mail server (ADMIN[0]) to allow less secure apps
+MAIL_SERVER = 'smtp.mail.yahoo.com'
+MAIL_PORT = 465
+MAIL_USE_TLS = False
+MAIL_USE_SSL = True
+MAIL_USERNAME = os.environ.get('YMAIL_USERNAME_ONE_ONE')
+MAIL_PASSWORD = os.environ.get('YMAIL_PASSWORD_ONE_ONE')
 
-# ADMINS = ['stephanie.spears1@gmail.com', 'stephanie.spears11@gmail.com', 'stephanie.spears1@yahoo.com', 'stephanie.spears11@yahoo.com']
+# administrator list # SENDER = ADMINS[0], RECIPIENTS = ADMINS (both)
+ADMINS = ['stephanie.spears11@yahoo.com', 'stephanie.spears11@gmail.com']
+
+
+# added TRACK_MODIFICATIONS = false here to disable warning in pycharm
+SQLALCHEMY_TRACK_MODIFICATIONS = False
