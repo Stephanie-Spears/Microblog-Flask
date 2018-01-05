@@ -11,5 +11,3 @@
 </table>
 <p>Regards,</p>
 <p>The <code>microblog</code> admin</p>
-
-{# Note the _external=True argument to url_for in the above templates. By default, the url_for function generates URLs that are relative to the domain from which the current page comes from. For example, the return value from url_for("index") will be /index, while in this case we want http://localhost:5000/index. In an email there is no domain context, so we have to force fully qualified URLs that include the domain, and the _external argument is just for that. #}

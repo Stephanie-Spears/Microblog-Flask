@@ -2,13 +2,6 @@ from hashlib import md5
 from app import db
 from app import app
 
-# NOTE: (SEEMS TO WORK FINE) if python3 functions ok in whooshalchemy, can remove the logic around enable search
-# import sys
-# if sys.version_info >= (3, 0):
-#     enable_search = False
-# else:
-#     enable_search = True
-#     import flask_whooshalchemy as whooshalchemy
 
 import flask_whooshalchemy as whooshalchemy
 enable_search = True
@@ -49,19 +42,19 @@ class User(db.Model):
 
     @property
     def is_authenticated(self):
-        return True  # should just return True unless the object represents a user that should not be allowed to authenticate for some reason
+        return True
 
     @property
     def is_active(self):
-        return True  # The is_active property should return True for users unless they are inactive, for example because they have been banned.
+        return True
 
     @property
     def is_anonymous(self):
-        return False  # The is_anonymous property should return True only for fake users that are not supposed to log in to the system.
+        return False
 
     def get_id(self):
         try:
-            return unicode(self.id)  # python 2 --> if NameError exception, execute except statement
+            return unicode(self.id)  # python 2
         except NameError:
             return str(self.id)  # python 3
 

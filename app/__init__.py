@@ -14,11 +14,10 @@ db = SQLAlchemy(app)
 lm = LoginManager()
 lm.init_app(app)
 lm.login_view = 'login'
-oid = OpenID(app, os.path.join(basedir, 'tmp'))  # The Flask-OpenID extension requires a path to a temp folder where files can be stored. For this we provide the location of our tmp folder.
+oid = OpenID(app, os.path.join(basedir, 'tmp'))
 mail = Mail(app)
 
 
-# # Note that we are only enabling the emails when we run without debugging (using runp.py script instead of run.py script).
 if not app.debug:
     import logging
     from logging.handlers import SMTPHandler
@@ -45,7 +44,7 @@ if not app.debug:
 app.jinja_env.globals['momentjs'] = momentjs
 
 
-from app import views, models  # put app import at the bottom to avoid circular reference, because 'views' module needs to import the app variable defined in this script.
+from app import views, models
 
 
 

@@ -19,7 +19,6 @@
     <div class="well">
         <h3>Please Sign In</h3>
         <form class="form" action="" method="post" name="login">
-{#            <!--The form.hidden_tag() template argument will get replaced with a hidden field that implements the CSRF prevention that we enabled in the configuration. This field needs to be in all your forms if you have CSRF enabled.-->#}
             {{ form.hidden_tag() }}
             <div class="help-block">Click on your OpenID provider below:</div>
             <div class="control-group">

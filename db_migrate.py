@@ -1,7 +1,5 @@
 #!flask36/bin/python
-# TODO: PYCHARM SAYS imp is deprecated and importlib should be used
 import imp
-# import importlib
 from migrate.versioning import api
 from app import db
 from config import SQLALCHEMY_DATABASE_URI
@@ -10,8 +8,6 @@ v = api.db_version(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
 migration = SQLALCHEMY_MIGRATE_REPO + ('/versions/%03d_migration.py' % (v+1))
 
 tmp_module = imp.new_module('old_model')
-# spec = importlib.abc.Loader.create_module('old_model')
-# tmp_module = importlib.util.module_from_spec(spec)
 
 old_model = api.create_model(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
 exec(old_model, tmp_module.__dict__)

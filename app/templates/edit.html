@@ -6,7 +6,7 @@
     {% include 'flash.html' %}
     <div class="well">
         <form class="form-horizontal" action="" method="post" name="edit">
-      {{ form.hidden_tag() }} <!--The form.hidden_tag() template argument will get replaced with a hidden field that implements the CSRF prevention that we enabled in the configuration. This field needs to be in all your forms if you have CSRF enabled.-->
+      {{ form.hidden_tag() }}
             <div class="control-group{% if form.nickname.errors %} error{% endif %}">
                 <label class="control-label" for="nickname">Your nickname:</label>
                 <div class="controls">

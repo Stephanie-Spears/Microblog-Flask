@@ -45,7 +45,7 @@ def index(page=1):
         db.session.add(post)
         db.session.commit()
         flash('Your post is now live!')
-        return redirect(url_for('index'))  # Without the redirect, the last request is the POST request that submitted the form, so a refresh browser action will resubmit the form, causing a second Post record that is identical to the first to be written to the database.
+        return redirect(url_for('index'))
     posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
     return render_template('index.html',
                            title='Home',
@@ -53,11 +53,6 @@ def index(page=1):
                            posts=posts)
 
 
-# The oid.loginhandler tells Flask-OpenID that this is our login view function.
-#     At the top of the function body we check if g.user is set to an authenticated user, and in that case we redirect to the index page. The idea here is that if there is a logged in user already we will not do a second login on top.
-#      The g global is setup by Flask as a place to store and share data during the life of a request
-#     First we store the value of the remember_me boolean in the flask session, not to be confused with the db.session from Flask-SQLAlchemy. We've seen that the flask.g object stores and shares data though the life of a request. The flask.session provides a much more complex service along those lines. Once data is stored in the session object it will be available during that request and any future requests made by the same client. Data remains in the session until explicitly removed. To be able to do this, Flask keeps a different session container for each client of our application.
-#     The oid.try_login call in the following line is the call that triggers the user authentication through Flask-OpenID. The function takes two arguments, the openid given by the user in the web form and a list of data items that we want from the OpenID provider. Since we defined our User class to include nickname and email, those are the items we are going to ask for.
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 def login():
@@ -176,7 +171,6 @@ def unfollow(nickname):
     return redirect(url_for('user', nickname=nickname))
 
 
-# This function doesn't really do much, it just collects the search query from the form and then redirects to another page passing this query as an argument. The reason the search work isn't done directly here is that if a user then hits the refresh button the browser will put up a warning indicating that form data will be resubmitted. This is avoided when the response to a POST request is a redirect, because after the redirect the browser's refresh button will reload the redirected page
 @app.route('/search', methods=['POST'])
 @login_required
 def search():
