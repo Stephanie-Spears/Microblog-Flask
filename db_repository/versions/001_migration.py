@@ -6,6 +6,7 @@ from migrate.changeset import schema
 pre_meta = MetaData()
 post_meta = MetaData()
 
+
 def upgrade(migrate_engine):
     # Upgrade operations go here. Don't create your own engine; bind
     # migrate_engine to your metadata

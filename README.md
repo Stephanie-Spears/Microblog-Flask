@@ -13,7 +13,9 @@ _Simple blog web application to demonstrate Flask microframework, using Python 3
 
 * `git clone https://github.com/Stephanie-Spears/Microblog-Flask`
 * _Requirements.txt included for Pip Installation._
-* _The program assumes you will be running shebang scripts under the environment name flask36 with a python 3.6 interpreter._
+* _The program assumes you will be running shebang scripts under the environment name 'flask36' with a python 3.6 interpreter._
+* _Run the app in debug mode with python script 'run.py', or run in production mode with 'runp.py'_
+
 
 
 ### License
