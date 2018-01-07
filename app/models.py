@@ -2,10 +2,9 @@ from hashlib import md5
 from app import db
 from app import app
 
-
 import flask_whooshalchemy as whooshalchemy
-enable_search = True
 
+enable_search = True
 
 followers = db.Table(
     'followers',
@@ -75,7 +74,8 @@ class User(db.Model):
         return self.followed.filter(followers.c.followed_id == user.id).count() > 0
 
     def followed_posts(self):
-        return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id).order_by(Post.timestamp.desc())
+        return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(
+            followers.c.follower_id == self.id).order_by(Post.timestamp.desc())
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)

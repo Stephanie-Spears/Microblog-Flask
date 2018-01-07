@@ -6,4 +6,4 @@ Dear {{ user.nickname }},
 
 Regards,
 
-The GooBlog admin
+The MicroBlog Admin

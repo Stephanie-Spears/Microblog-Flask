@@ -1,0 +1,25 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>List of Users</h1>
+    {#    <!-- users is a Paginate object -->#}
+
+    {% for user in userlist.items %}
+        {% include 'user.html' %}
+        {{ user.nickname }}
+    {% endfor %}
+{#    <ul class="pager">#}
+{#        {% if userlist.has_prev %}#}
+{#            <li class="previous"><a href="{{ url_for('userlist', page=userlist.prev_num) }}">Newer Users</a></li>#}
+{#        {% else %}#}
+{#            <li class="previous disabled"><a href="#">Newer Users</a></li>#}
+{#        {% endif %}#}
+{#        {% if userlist.has_next %}#}
+{#            <li class="next"><a href="{{ url_for('userlist', page=userslist.next_num) }}">Older Users</a></li>#}
+{#        {% else %}#}
+{#            <li class="next disabled"><a href="#">Older Users</a></li>#}
+{#        {% endif %}#}
+{#    </ul>#}
+
+{% endblock %}

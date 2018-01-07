@@ -98,6 +98,13 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+# @app.route('userlist/<int:page>')
+@app.route('/userlist')
+@login_required
+def userlist():
+    userlist = User.query.order_by(User.id).all()
+    return render_template('userlist.html', title='Userlist', userlist=userlist)
+
 
 @app.route('/user/<nickname>')
 @app.route('/user/<nickname>/<int:page>')
