@@ -98,14 +98,26 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-# @app.route('userlist/<int:page>')
+
 @app.route('/userlist')
 @login_required
 def userlist():
-    userlist = User.query.order_by(User.id).all()
-    return render_template('userlist.html', title='Userlist', userlist=userlist)
+    userlist = User.query.order_by(User.last_seen.desc()).all()
+    return render_template('userlist.html', title='Member List', userlist=userlist)
 
 
+# @app.route('/user_and_posts/<nickname>')
+# @app.route('/user_and_posts/<nickname>/<int:page>')
+# @login_required
+# def user_and_posts(nickname, page=1):
+#     user = User.query.filter_by(nickname=nickname).first()
+#     if user is None:
+#         flash('User %s not found.' % nickname)
+#         return redirect(url_for('index'))
+#     posts = user.posts.order_by(Post.timestamp.desc()).paginate(page, POSTS_PER_PAGE, False)
+#     return render_template('user_and_posts.html',
+#                            user=user,
+#                            posts=posts)
 @app.route('/user/<nickname>')
 @app.route('/user/<nickname>/<int:page>')
 @login_required
